@@ -11,6 +11,7 @@ import io.vertx.ext.web.handler.CookieHandler;
 import io.vertx.ext.web.handler.FormLoginHandler;
 import io.vertx.ext.web.handler.RedirectAuthHandler;
 import io.vertx.ext.web.handler.SessionHandler;
+import io.vertx.ext.web.handler.UserSessionHandler;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 import io.vertx.ext.web.sstore.SessionStore;
 
@@ -43,6 +44,7 @@ public class Server extends AbstractVerticle {
     AuthProvider authProvider = new MyAuthProviderImpl(vertx);
     AuthHandler authHandler = RedirectAuthHandler.create(authProvider, "/loginpage");
     authHandler.addAuthority("whatever");
+    router.route().handler(UserSessionHandler.create(authProvider));
     router.route("/protected/*").handler(authHandler);
     router.route("/login/*").handler(BodyHandler.create());
     router.route("/login").handler(FormLoginHandler.create(authProvider));
